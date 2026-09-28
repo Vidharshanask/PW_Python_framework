@@ -2,110 +2,99 @@
 
 [![Playwright Tests](https://github.com/Vidharshanask/PW_Python_framework/actions/workflows/playwright.yml/badge.svg)](https://github.com/Vidharshanask/PW_Python_framework/actions/workflows/playwright.yml)
 
-A modular, production-ready UI and API test automation framework built with **Python**, **Playwright**, and **pytest**. Designed around the **Page Object Model (POM)** pattern, centralized fixture-based browser management, and continuous integration via **GitHub Actions**.
+A modular UI and API test automation framework built with **Python**, **Playwright**, and **pytest**. It uses the **Page Object Model (POM)**, fixture-based browser management, and continuous integration via **GitHub Actions**.
 
-Target Application: [SauceDemo](https://www.saucedemo.com/) (UI) & [ReqRes](https://reqres.in/) (REST API)
+**Targets:** [SauceDemo](https://www.saucedemo.com/) (UI) and [ReqRes](https://reqres.in/) (REST API)
 
 ---
 
 ## Key Features
 
-- **Page Object Model (POM):** Decoupled UI element locators and page interactions from test assertions across modular classes (`LoginPage`, `InventoryPage`, `CheckoutPage`).
-- **Centralized Fixture Architecture:** Managed browser context and lifecycle in `conftest.py` with automated setup/teardown isolation per test.
-- **REST API Validation:** Native API test suite utilizing Playwright's `APIRequestContext` for request dispatching, schema/payload validation, and status assertions without third-party HTTP clients.
-- **Data-Driven Parameterization:** Leveraged `@pytest.mark.parametrize` for negative login validation and boundary checks.
-- **Automated HTML Reporting with Screenshots:** Integrated `pytest-html` with dynamic base64 screenshot capture on test failures via pytest hook wrappers.
-- **Continuous Integration (CI/CD):** Automated workflow using GitHub Actions running headlessly on Ubuntu runners across push, pull request, and manual dispatch events, with automated test report artifact archiving.
+- **Page Object Model (POM):** UI locators and page interactions separated from test assertions (`LoginPage`, `InventoryPage`, `CheckoutPage`).
+- **Fixture architecture:** Browser context and lifecycle managed in `conftest.py`, with setup and teardown isolated per test.
+- **REST API testing:** Playwright's `APIRequestContext` for GET, POST and PUT requests, with status code and JSON payload assertions and no third-party HTTP client.
+- **Data-driven tests:** `@pytest.mark.parametrize` for negative login and boundary cases.
+- **HTML reporting with screenshots:** `pytest-html` report with base64 failure screenshots captured through a pytest hook wrapper.
+- **CI/CD:** GitHub Actions runs headless on Ubuntu for push, pull request and manual dispatch, and archives the test report as an artifact.
 
 ---
 
-## Framework Architecture
+## Project Structure
 
+```
 PW_Python_framework/
 ├── .github/
 │   └── workflows/
-│       └── playwright.yml     # GitHub Actions CI workflow definition
+│       └── playwright.yml     # GitHub Actions CI workflow
 ├── pages/
 │   ├── __init__.py
-│   ├── login_page.py          # POM: Authentication interactions & locators
-│   ├── inventory_page.py      # POM: Catalog filtering & cart manipulation
-│   └── checkout_page.py       # POM: Form handling & checkout completion
-├── conftest.py                # Fixtures, browser lifecycle & failure reporting hooks
+│   ├── login_page.py          # Login interactions & locators
+│   ├── inventory_page.py      # Catalog & cart actions
+│   └── checkout_page.py       # Checkout form & completion
+├── conftest.py                # Fixtures, browser lifecycle, failure hook
 ├── test_login.py              # Positive & parameterized negative login tests
-├── test_checkout.py           # End-to-end purchasing workflow tests
-├── test_api.py                # REST API test suite via Playwright request context
-├── requirements.txt           # Framework dependencies
-├── .gitignore                 # Artifact & cache exclusion rules
-└── README.md                  # Project documentation & CI status
+├── test_checkout.py           # End-to-end purchase flow
+├── test_api.py                # REST API tests
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
 
 ---
 
-## 🚀 Key Framework Highlights
-* Page Object Model (POM): Encapsulates web elements and page actions in dedicated classes (LoginPage, InventoryPage, CheckoutPage), eliminating hardcoded selectors across test files.
+## Installation
 
-* Centralized Browser Fixtures (conftest.py): Uses @pytest.fixture(scope="function") to manage browser launching, context isolation, and automatic teardown (yield) via pytest dependency injection.
+```bash
+git clone https://github.com/Vidharshanask/PW_Python_framework.git
+cd PW_Python_framework
 
-* Data-Driven Parameterization: Utilizes @pytest.mark.parametrize in test_login.py to validate multiple boundary conditions (locked-out user, wrong password, missing fields) within a single test definition.
-
-* Integrated REST API Automation: Uses Playwright's native APIRequestContext in test_api.py to send GET, POST, and PUT requests, asserting HTTP status codes and JSON payloads without extra HTTP libraries.
-
----
-
-## ⚙️ Installation & Environment Setup
-1. Clone the Repository
-git clone https://github.com/Vidharshanask/PW_Python_framework
-cd Playwright_skv
-
-2. Create and Activate Virtual Environment
-# Windows (Command Prompt / PowerShell):
+# Windows
 python -m venv venv
 venv\Scripts\activate
 
-# macOS / Linux:
+# macOS / Linux
 python3 -m venv venv
 source venv/bin/activate
 
-3. Install Dependencies
 pip install -r requirements.txt
-
-4. Install Playwright Browser Binaries
 playwright install chromium
+```
 
 ---
 
-## 🧪 Test Execution Commands
-Run the Full Test Suite (Headless Default)
+## Running Tests
+
+```bash
+# Full suite (headless by default)
 pytest -v
-Run Tests in Headed Mode (Local Debugging)
-pytest -v --headed
 
-Run a Specific Test Module
-# UI Login tests
+# Headed mode for local debugging
+# PowerShell:
+$env:HEADED=1; pytest -v
+Remove-Item Env:HEADED          # switch back to headless
+
+# macOS / Linux:
+HEADED=1 pytest -v
+
+# Individual modules
 pytest test_login.py -v
-
-# UI Checkout flow
 pytest test_checkout.py -v
-
-# REST API tests
 pytest test_api.py -v
 
-Generate Standalone HTML Test Report
+# Standalone HTML report
 pytest -v --html=report.html --self-contained-html
+```
 
-CI/CD Pipeline (GitHub Actions)
-The repository runs an automated CI pipeline on every push and pull request against main.
-
-Runner Environment: ubuntu-latest
-Execution Mode: Headless Chromium with OS dependency bootstrapping (playwright install chromium --with-deps)
-
-Artifact Archiving: Publishes report.html as a downloadable artifact retained for 14 days on all runs, even upon test failure (if: always()).
 ---
 
-### Push it to GitHub
+## CI/CD Pipeline (GitHub Actions)
 
-Run these commands in your terminal:
+The workflow runs on:
+- **Push** to `main` or `master`
+- **Pull requests** targeting `main` or `master`
+- **Manual dispatch** (`workflow_dispatch`) from the Actions tab
 
-```cmd
-git add README.md
-git commit -m "docs: update README with architecture, CI badge, and execution commands"
-git push origin main
+**Pipeline details:**
+- **Runner:** `ubuntu-latest`
+- **Execution:** headless Chromium with OS dependencies (`playwright install chromium --with-deps`)
+- **Artifacts:** `report.html` is uploaded on every run, even when tests fail (`if: always()`), and retained for 14 days. Download it from the run page in the **Actions** tab.
