@@ -1,4 +1,5 @@
 # Playwright Python Test Automation Framework
+[![Playwright Tests](https://github.com/Vidharshanask/PW_Python_framework/actions/workflows/playwright.yml/badge.svg)](https://github.com/Vidharshanask/PW_Python_framework/actions/workflows/playwright.yml)
 
 A modular, maintainable UI and API test automation framework built using **Python**, **Playwright**, and **pytest**. This project demonstrates industry-standard automation patterns, including the **Page Object Model (POM)** for UI workflows on SauceDemo and automated REST API validations against ReqRes using Playwright's native network client.
 
