@@ -69,9 +69,7 @@ playwright install chromium
 pytest -v
 
 # Headed mode for local debugging
-# PowerShell:
-$env:HEADED=1; pytest -v
-Remove-Item Env:HEADED          # switch back to headless
+pytest -v --headed        # switch back to headless
 
 # macOS / Linux:
 HEADED=1 pytest -v
