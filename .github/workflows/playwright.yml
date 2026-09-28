@@ -33,4 +33,4 @@ jobs:
 
       - name: Run Test Suite
         run: |
-          pytest -v --headed=false
+          pytest -v
