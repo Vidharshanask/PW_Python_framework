@@ -92,13 +92,20 @@ pytest test_api.py -v
 Generate Standalone HTML Test Report
 pytest -v --html=report.html --self-contained-html
 
+CI/CD Pipeline (GitHub Actions)
+The repository runs an automated CI pipeline on every push and pull request against main.
+
+Runner Environment: ubuntu-latest
+Execution Mode: Headless Chromium with OS dependency bootstrapping (playwright install chromium --with-deps)
+
+Artifact Archiving: Publishes report.html as a downloadable artifact retained for 14 days on all runs, even upon test failure (if: always()).
 ---
 
-### Step to Apply & Push the Fix
+### Push it to GitHub
 
-Run these commands in your project root terminal:
+Run these commands in your terminal:
 
 ```cmd
 git add README.md
-git commit -m "docs: overhaul README to align directory structure, clean commands, and showcase CI"
+git commit -m "docs: update README with architecture, CI badge, and execution commands"
 git push origin main
